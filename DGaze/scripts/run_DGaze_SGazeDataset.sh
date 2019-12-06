@@ -1,0 +1,2 @@
+# --resume ../checkpoint/DGaze1/checkpoint_epoch_010.tar
+CUDA_VISIBLE_DEVICES=2 python DGaze_SGazeDataset.py --trainFlag 0 --epochs 30 --lr 1e-2 --schedule 5 10 15 20 25 30 --batch_size 64 --loss L1 --dropout_rate 0.5 --summaryDir ../summary/SGaze/ --checkpoint ../checkpoint/SGaze/ --interval 5 --gamma 0.1 --datasetDir ../../DGazeDataset/dataset/SGaze/ --save 0 --predictionDir ../predictions/SGaze/ 
