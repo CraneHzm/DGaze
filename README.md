@@ -15,9 +15,9 @@ Next, we perform statistical analysis of our data and observe that dynamic objec
 Based on our analysis, we present a CNN-based model (DGaze) that combines object position sequence, head velocity sequence, and saliency features to predict users' gaze positions. 
 Our model can be applied to predict not only realtime gaze positions but also gaze positions in the near future and can achieve better performance than prior method. 
 In terms of realtime prediction, DGaze achieves a 22.0% improvement over prior method in dynamic scenes and obtains an improvement of 9.5% in static scenes, based on using the angular distance as the evaluation metric. 
-We also propose a variant of our model called DGaze_ET to predict future gaze positions with higher precision by combining accurate past gaze data from an eye tracker.
+We also propose a variant of our model called DGaze_ET that can be used to predict future gaze positions with higher precision by combining accurate past gaze data gathered using an eye tracker. 
 We further analyze our CNN architecture and verify the effectiveness of each component in our model. 
-We also apply our model to gaze-contingent rendering and a game, and also present the evaluation results from a user study.
+We apply DGaze to gaze-contingent rendering and a game, and also present the evaluation results from a user study.
 ```	
 
 ## Environments:
