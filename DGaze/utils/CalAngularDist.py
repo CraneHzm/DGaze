@@ -47,9 +47,9 @@ def CalAngularDist(gth, prd):
 	return angular_dist
 	
 def AngularCoord2ScreenCoord(AngularCoord):
-	# transform the angular coords to screen coords which are in the range of
-	# 0-1. (0, 0) is the top-left and (1, 1) is the bottom-right.
-
+	# transform the angular coords ((0 deg, 0 deg) at screen center) to screen coords which are in the range of
+	# 0-1. (0, 0) at Bottom-left, (1, 1) at Top-right
+	
 	# the parameters of our Hmd (HTC Vive).
 	# Vertical FOV.
 	VerticalFov = math.pi*110/180;
@@ -62,9 +62,9 @@ def AngularCoord2ScreenCoord(AngularCoord):
 	ScreenCoord = np.zeros(2)
 	
 	# the X coord.
-	ScreenCoord[0] = (ScreenDist * math.tan(math.pi*AngularCoord[0] / 180) + 0.5*ScreenWidth) / ScreenWidth; 
+	ScreenCoord[0] = 0.5 + (ScreenDist * math.tan(math.pi*AngularCoord[0] / 180)) / ScreenWidth; 
 	# the Y coord.
-	ScreenCoord[1] = (ScreenDist * math.tan(-math.pi*AngularCoord[1] / 180) + 0.5*ScreenHeight) / ScreenHeight;
+	ScreenCoord[1] = 0.5 + (ScreenDist * math.tan(math.pi*AngularCoord[1] / 180)) / ScreenHeight;
 	return ScreenCoord
 	
 	

@@ -8,11 +8,10 @@ from math import floor
 
 # DGaze Model.
 class DGaze(nn.Module):
-    def __init__(self, inputSize, seqLength, seqFeatureNum, saliencyWidth, saliencyNum, n_output, dropoutRate):
+    def __init__(self, seqLength, seqFeatureNum, saliencyWidth, saliencyNum, n_output, dropoutRate):
         super(DGaze, self).__init__()
         
         # the input params
-        self.inputSize = inputSize
         self.seqLength = seqLength
         self.seqFeatureNum = seqFeatureNum
         self.seqSize = self.seqLength * self.seqFeatureNum
@@ -161,15 +160,76 @@ class DGaze(nn.Module):
     def forward(self, x):
         out = self.forward1(x)
         return out  
+    
+    
+# DGaze Model using only head and object data as input features.
+class DGaze_HeadObject(nn.Module):
+    def __init__(self, seqLength, seqFeatureNum, n_output, dropoutRate):
+        super(DGaze_HeadObject, self).__init__()
+        
+        # the input params
+        self.seqLength = seqLength
+        self.seqFeatureNum = seqFeatureNum
+        self.seqSize = self.seqLength * self.seqFeatureNum        
+        
+        
+        # the model params
+        seqCNN1D_outChannels = 128
+        seqCNN1D_poolingRate = 2
+        seqCNN1D_kernelSize = 2
+        self.seqCNN1D_outputSize = floor((self.seqLength - seqCNN1D_kernelSize + 1)/seqCNN1D_poolingRate)* seqCNN1D_outChannels
+        #print(self.seqCNN1D_outputSize)        
+        prdFC_inputSize = self.seqCNN1D_outputSize
+        prdFC_linearSize1 = 128
+        prdFC_linearSize2 = 128
+        
+        
+        # the headobject sequence encoder layer
+        self.SeqCNN1D = nn.Sequential(
+            nn.Conv1d(in_channels=self.seqFeatureNum, out_channels=seqCNN1D_outChannels,kernel_size=seqCNN1D_kernelSize),
+            nn.BatchNorm1d(seqCNN1D_outChannels),
+            nn.ReLU(),
+            nn.MaxPool1d(seqCNN1D_poolingRate),
+            nn.Dropout(p = dropoutRate),
+             )
+        
+       
+        # the prediction fc layer for DGaze.
+        self.PrdFC = nn.Sequential(
+            nn.Linear(prdFC_inputSize, prdFC_linearSize1),
+            nn.BatchNorm1d(prdFC_linearSize1),
+            nn.ReLU(),
+            nn.Dropout(p = dropoutRate),
+            nn.Linear(prdFC_linearSize1, prdFC_linearSize2),
+            nn.BatchNorm1d(prdFC_linearSize2),
+            nn.ReLU(),
+            nn.Dropout(p = dropoutRate),
+            nn.Linear(prdFC_linearSize2, n_output)
+             )
+                
+    def forward1(self, x):
+        headObjectSeq = x[:, 0:self.seqSize]               
+        
+        headObjectSeq = headObjectSeq.reshape(-1, self.seqLength, self.seqFeatureNum)
+        headObjectSeq = headObjectSeq.permute(0,2,1)
+        seqOut = self.SeqCNN1D(headObjectSeq)
+        seqOut = seqOut.reshape(-1, self.seqCNN1D_outputSize)               
+        prdInput = seqOut
+        out = self.PrdFC(prdInput)
+        return out
+    
+    def forward(self, x):
+        out = self.forward1(x)
+        return out  
 
-
+    
+    
 # DGaze Model for SGaze Dataset.
 class DGaze_SGazeDataset(nn.Module):
-    def __init__(self, inputSize, seqLength, seqFeatureNum, saliencyWidth, saliencyNum, n_output, dropoutRate):
+    def __init__(self, seqLength, seqFeatureNum, saliencyWidth, saliencyNum, n_output, dropoutRate):
         super(DGaze_SGazeDataset, self).__init__()
         
         # the input params
-        self.inputSize = inputSize
         self.seqLength = seqLength
         self.seqFeatureNum = seqFeatureNum
         self.seqSize = self.seqLength * self.seqFeatureNum
@@ -241,11 +301,10 @@ class DGaze_SGazeDataset(nn.Module):
     
 # DGaze_ET Model.
 class DGaze_ET(nn.Module):
-    def __init__(self, inputSize, seqLength, seqFeatureNum, saliencyWidth, saliencyNum, n_output, dropoutRate):
+    def __init__(self, seqLength, seqFeatureNum, saliencyWidth, saliencyNum, n_output, dropoutRate):
         super(DGaze_ET, self).__init__()
         
         # the input params
-        self.inputSize = inputSize
         self.seqLength = seqLength
         self.seqFeatureNum = seqFeatureNum
         self.seqSize = self.seqLength * self.seqFeatureNum
@@ -315,3 +374,63 @@ class DGaze_ET(nn.Module):
         return out          
     
     
+# DGaze_ET Model using only gaze, head and object data as input features
+class DGaze_ET_GazeHeadObject(nn.Module):
+    def __init__(self, seqLength, seqFeatureNum, n_output, dropoutRate):
+        super(DGaze_ET_GazeHeadObject, self).__init__()
+        
+        # the input params
+        self.seqLength = seqLength
+        self.seqFeatureNum = seqFeatureNum
+        self.seqSize = self.seqLength * self.seqFeatureNum        
+        
+        
+        # the model params
+        seqCNN1D_outChannels = 128
+        seqCNN1D_poolingRate = 2
+        seqCNN1D_kernelSize = 2
+        self.seqCNN1D_outputSize = floor((self.seqLength - seqCNN1D_kernelSize + 1)/seqCNN1D_poolingRate)* seqCNN1D_outChannels
+        #print(self.seqCNN1D_outputSize)        
+        prdFC_inputSize = self.seqCNN1D_outputSize
+        prdFC_linearSize1 = 128
+        prdFC_linearSize2 = 128
+        
+        
+        # the headobject sequence encoder layer
+        self.SeqCNN1D = nn.Sequential(
+            nn.Conv1d(in_channels=self.seqFeatureNum, out_channels=seqCNN1D_outChannels,kernel_size=seqCNN1D_kernelSize),
+            nn.BatchNorm1d(seqCNN1D_outChannels),
+            nn.ReLU(),
+            nn.MaxPool1d(seqCNN1D_poolingRate),
+            nn.Dropout(p = dropoutRate),
+             )
+        
+       
+        # the prediction fc layer for DGaze.
+        self.PrdFC = nn.Sequential(
+            nn.Linear(prdFC_inputSize, prdFC_linearSize1),
+            nn.BatchNorm1d(prdFC_linearSize1),
+            nn.ReLU(),
+            nn.Dropout(p = dropoutRate),
+            nn.Linear(prdFC_linearSize1, prdFC_linearSize2),
+            nn.BatchNorm1d(prdFC_linearSize2),
+            nn.ReLU(),
+            nn.Dropout(p = dropoutRate),
+            nn.Linear(prdFC_linearSize2, n_output)
+             )
+                
+    def forward1(self, x):
+        headObjectSeq = x[:, 0:self.seqSize]               
+        
+        headObjectSeq = headObjectSeq.reshape(-1, self.seqLength, self.seqFeatureNum)
+        headObjectSeq = headObjectSeq.permute(0,2,1)
+        seqOut = self.SeqCNN1D(headObjectSeq)
+        seqOut = seqOut.reshape(-1, self.seqCNN1D_outputSize)               
+        prdInput = seqOut
+        out = self.PrdFC(prdInput)
+        return out
+    
+    def forward(self, x):
+        out = self.forward1(x)
+        return out  
+   

@@ -36,7 +36,8 @@ def main(args):
     input_size = args.featureNum
     # regress 2 values
     n_output = 2
-    model = DGaze(input_size, args.seqLength, args.seqFeatureNum, args.saliencyWidth, args.saliencyNum, n_output, args.dropout_rate)
+    model = DGaze(args.seqLength, args.seqFeatureNum, args.saliencyWidth, args.saliencyNum, n_output, args.dropout_rate)
+    #model = DGaze_HeadObject(args.seqLength, args.seqFeatureNum, n_output, args.dropout_rate)
     model.apply(weight_init)
     model = torch.nn.DataParallel(model)
     if args.loss == 'L1':
