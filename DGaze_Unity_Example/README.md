@@ -20,11 +20,11 @@
 
 Unity Scripts:  
 "CalculateHeadVelocity.cs": calculates the velocity of a head camera.    
-"DataRecorder.cs": collects head and object data.
-"DataRecorder_DGaze_ET.cs": collects gaze, head and object data.
-"Client.cs": sends the collected head and object data to a python server.  
-"Client_DGaze_ET.cs": sends the collected gaze, head and object data to a python server.  
-"TrackObjects.cs": track the positions of the dynamic objects in the scene.
+"DataRecorder.cs": collects head and object data.   
+"DataRecorder_DGaze_ET.cs": collects gaze, head and object data.   
+"Client.cs": sends the collected head and object data to a python server.   
+"Client_DGaze_ET.cs": sends the collected gaze, head and object data to a python server.   
+"TrackObjects.cs": track the positions of the dynamic objects in the scene.   
 
 
 Using this example, you can do a lot of interesting things, e.g.  
