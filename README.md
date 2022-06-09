@@ -22,7 +22,7 @@ We apply DGaze to gaze-contingent rendering and a game, and also present the eva
 ```	
 
 ## Environments:
-Ubuntu: 18.04  
+Ubuntu 18.04  
 python 3.6+  
 pytorch 1.1.0+  
 tensorboardX 1.8+  
