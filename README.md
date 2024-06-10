@@ -33,3 +33,18 @@ CUDA 9.0+
 Step 1: Download the dataset from our project homepage: https://cranehzm.github.io/DGaze.
 
 Step 2: Run the scripts "run_DGaze.sh" and "run_DGaze_ET.sh" in "scripts/" to retrain or test DGaze model and DGaze_ET model.
+
+
+## Citation
+```bibtex
+@article{hu20_dgaze,
+  title = {DGaze: CNN-Based Gaze Prediction in Dynamic Scenes},
+  author = {Hu, Zhiming and Li, Sheng and Zhang, Congyi and Yi, Kangrui and Wang, Guoping and Manocha, Dinesh},
+  journal = {IEEE Transactions on Visualization and Computer Graphics},
+  volume = {26},
+  number = {5},
+  pages = {1902--1911},
+  year = {2020},
+  doi = {10.1109/TVCG.2020.2973473}
+}
+```
